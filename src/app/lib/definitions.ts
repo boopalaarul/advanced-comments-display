@@ -2,7 +2,7 @@
 export type Comment = {
     id: number,
     username: string,
-    timestamp: Date,
+    timestamp: string,
     text: string,
-    replying_to: number
+    replying_to: number | null
 };

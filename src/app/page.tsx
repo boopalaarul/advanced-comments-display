@@ -5,7 +5,7 @@ export default function Home() {
   return (
     //semantic tag, contains main feature of page
     <main>
-      <CommentsSection comments={10} />
+      <CommentsSection />
     </main>
   )
 }
