@@ -1,3 +1,5 @@
+//default homepage from create-next-app, not used, only incl. as reference
+
 import Image from 'next/image'
 
 export default function Home() {

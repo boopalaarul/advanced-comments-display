@@ -1,3 +1,5 @@
+//was being used to fetch data for server components, not being used anymore
+
 import { sql } from '@vercel/postgres';
 import { Comment } from './definitions';
 
