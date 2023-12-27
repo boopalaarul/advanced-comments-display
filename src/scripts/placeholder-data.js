@@ -1,4 +1,24 @@
 //array of comment objects, for seeding database
+const REPLY_TO_ROOT = null
+
+const users = [
+    {
+        username: "Frank"
+    },
+    {
+        username: "Joe"
+    },
+    {
+        username: "Jeff"
+    },
+    {
+        username: "Jess"
+    },
+    {
+        username: "Leela"
+    },
+]
+
 const comments = [
     //each comment's fields: serial id, date-time posted, username, text, replying_to
     {
@@ -7,7 +27,7 @@ const comments = [
         username: users[0].username,
         timestamp: new Date('December 19, 2015 23:15:30 UTC').toISOString(),
         text: "I agree! This movie was heartwarming, perfect for the holidays",
-        replying_to: -1 //top level comments aren't "replying": INTEGER data type
+        replying_to: REPLY_TO_ROOT //top level comments aren't "replying": INTEGER data type
     },
     {
         id: 1,
@@ -21,7 +41,7 @@ const comments = [
         username: users[2].username,
         timestamp: new Date('December 20, 2015 00:05:10 UTC').toISOString(),
         text: "Good review. But I still think the source material was better.",
-        replying_to: -1 //top level comments aren't "replying": INTEGER data type
+        replying_to: REPLY_TO_ROOT //top level comments aren't "replying": INTEGER data type
     },
     {
         id: 3,
@@ -35,7 +55,7 @@ const comments = [
         username: users[3].username,
         timestamp: new Date('December 20, 2015 01:15:30 UTC').toISOString(),
         text: "If you want to live life like the movie stars, sign up for my course on spamsite.net!",
-        replying_to: -1 //top level comments aren't "replying": INTEGER data type
+        replying_to: REPLY_TO_ROOT //top level comments aren't "replying": INTEGER data type
     },
     {
         id: 5,
@@ -73,24 +93,8 @@ const comments = [
         username: users[0].username,
         timestamp: new Date('December 25, 2015 08:15:30 UTC').toISOString(),
         text: "Merry Christmas everyone!!!",
-        replying_to: -1 //top level comments aren't "replying": INTEGER data type
+        replying_to: REPLY_TO_ROOT //top level comments aren't "replying": INTEGER data type
     },
 ]
 
-const users = [
-    {
-        username: "Frank"
-    },
-    {
-        username: "Joe"
-    },
-    {
-        username: "Jeff"
-    },
-    {
-        username: "Jess"
-    },
-    {
-        username: "Leela"
-    },
-]
+module.exports = {users, comments};

@@ -5,4 +5,4 @@ export type Comment = {
     timestamp: Date,
     text: string,
     replying_to: number
-}
+};
