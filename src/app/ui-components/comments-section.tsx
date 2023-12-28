@@ -9,6 +9,8 @@ export default function CommentsSection() {
     const [isHierarchical, setMode] = useState(false)
 
     return (
+        //this div not only controls the background, but also the spacing between 
+        //comment cards or top-level comment threads
         <div className="bg-yellow-500 p-10 flex flex-col space-y-5">
             <h1 className="text-2xl text-bold text-black">Comments</h1>
             <p className="text-black"><strong>Comments policy:</strong> Be civil etc etc</p>
@@ -17,7 +19,7 @@ export default function CommentsSection() {
                         isHierarchical ? "threaded" : "chronological"
                     } mode.</p>
                 <button className="rounded-md bg-gray-500 px-[4px]" onClick={() => {setMode(!isHierarchical)}}>Change Display Mode</button>
-        </div>
+            </div>
 
             {isHierarchical ? <CommentsThreaded root_id={null}/> : <CommentsChronological/>}
         </div>
