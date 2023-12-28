@@ -1,11 +1,14 @@
-import Image from 'next/image'
-import CommentsSection from './ui-components/comments-section'
+"use client"
+import App from './ui-components/app-component'
+import { AuthorizeContext } from './ui-components/context/authorize-context'
+import SubmitModeProvider from './ui-components/context/submitmode-provider'
 
 export default function Home() {
   return (
-    //semantic tag, contains main feature of page
-    <main>
-      <CommentsSection />
-    </main>
+    <AuthorizeContext.Provider value="Frank">
+      <SubmitModeProvider>
+        <App />
+      </SubmitModeProvider>          
+    </AuthorizeContext.Provider>
   )
 }

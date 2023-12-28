@@ -11,17 +11,17 @@ export default function CommentsSection() {
     return (
         //this div not only controls the background, but also the spacing between 
         //comment cards or top-level comment threads
-        <div className="bg-yellow-500 p-10 flex flex-col space-y-5">
+        <div className="bg-yellow-500 flex flex-col space-y-5">
             <h1 className="text-2xl text-bold text-black">Comments</h1>
             <p className="text-black"><strong>Comments policy:</strong> Be civil etc etc</p>
-            <div className="flex flex-row space-x-5">
-                <p className="text-black">Comments displaying in: {
+            <div className="flex flex-row space-x-5 text-black">
+                <p>Comments displaying in: {
                         isHierarchical ? "threaded" : "chronological"
                     } mode.</p>
-                <button className="rounded-md bg-gray-500 px-[4px]" onClick={() => {setMode(!isHierarchical)}}>Change Display Mode</button>
+                <button className="button" onClick={() => {setMode(!isHierarchical)}}>Change Display Mode</button>
             </div>
-
             {isHierarchical ? <CommentsThreaded root_id={null}/> : <CommentsChronological/>}
+            
         </div>
     )
 }
