@@ -53,7 +53,8 @@ export default function CommentsThreaded({ root_id } : { root_id: number | null 
                     username={row.username}
                     timestamp={row.timestamp}
                     text={row.text}
-                    replying_to={row.replying_to}/>
+                    replying_to={row.replying_to}
+                    deleted={row.deleted}/>
                     
                     {/* rendering the child comments */}
                     <div className="flex flex-row">

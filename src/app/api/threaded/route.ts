@@ -12,8 +12,8 @@ export async function GET(request: NextRequest) {
 
     try {
         const data = replying_to !== "null" 
-            ? (await sql<Comment>`SELECT * FROM comments WHERE replying_to = ${replying_to}`)
-            : (await sql<Comment>`SELECT * FROM comments WHERE replying_to IS NULL`);
+            ? (await sql<Comment>`SELECT * FROM comments WHERE replying_to = ${replying_to} ORDER BY id ASC`)
+            : (await sql<Comment>`SELECT * FROM comments WHERE replying_to IS NULL ORDER BY id ASC`);
         return NextResponse.json({ rows: data.rows }, { status: 200 });
     } catch (error) {
         console.error('Database Error:', error);

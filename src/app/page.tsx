@@ -5,7 +5,7 @@ import SubmitModeProvider from './ui-components/context/submitmode-provider'
 
 export default function Home() {
   return (
-    <AuthorizeContext.Provider value="Frank">
+    <AuthorizeContext.Provider value="Jess">
       <SubmitModeProvider>
         <App />
       </SubmitModeProvider>          

@@ -29,6 +29,7 @@ export default function CommentInput() {
 
     //state variable for controlled input textarea
     const [inputText, setInputText] = useState("")
+    //let inputText = useRef(submitMode.text ? submitMode.text : "")
 
     let heading = "";
     switch(submitMode.mode) {
@@ -56,17 +57,93 @@ export default function CommentInput() {
     function clearPreference() {
         setSubmitMode({mode:defaultMode});
         setInputText(""); //clears input
+        //inputText.current = ""
     }
 
     //controls the textarea component
     function handleInputChange(event: any) {
         const target = event.target as HTMLTextAreaElement;
         setInputText(target.value);
+        //inputText.current = target.value
+    }
+
+    //using fetch to POST, figure out what the search params should look like
+    async function handleSubmit(){
+        //switch statements for URL and method (POST, PUT, DELETE)
+        //PUT vs POST: POST changes are the kind that would have a stacking effect
+        //if they were repeated, e.g. adding several duplicates of a new row; PUT
+        //wouldn't have this effect (e.g. updating/replacing one row over and over)
+        let url = ""
+        let method = ""
+
+        //escape characters like # in input text
+        let encodedInputText = encodeURIComponent(inputText)
+
+        switch(submitMode.mode) {
+            case defaultMode: {
+                //template literals might auto-escape newlines, but don't autoescape tabs!
+                url = `/api/editData/?username=${loggedInUser}`
+                    + `&timestamp=${(new Date(Date.now())).toISOString()}`
+                    + `&text=${encodedInputText}`
+                    + `&replying_to=${null}`;
+                method = "POST"
+                break;
+            }
+            case replyMode: {
+                url =`/api/editData/?username=${loggedInUser}`
+                    + `&timestamp=${(new Date(Date.now())).toISOString()}`
+                    + `&text=${encodedInputText}`
+                    + `&replying_to=${submitMode.target}`
+                method = "POST"
+                break;
+            }
+            case editMode: {
+                //username not strictly necessary for this one (expect a person to be
+                //editing their own comments), but can throw error if there's a mismatch
+                url = `/api/editData/?id=${submitMode.target}`
+                    + `&username=${loggedInUser}`
+                    + `&timestamp=${(new Date(Date.now())).toISOString()}`
+                    + `&text=${encodedInputText}`
+                method = "PUT"
+                break;
+            }
+            case removeMode: {
+                //username, text included for extra WHERE conditions
+                url = `/api/editData/?id=${submitMode.target}`
+                    + `&username=${loggedInUser}`
+                    + `&text=${submitMode.text}`
+                method = "DELETE"
+                //don't know what fields we need for this one
+                //before designing the APIs, have the exact SQL commands we need written
+                //out on paper
+                break;
+            }
+            default: {
+                throw Error("submit mode doesn't have a valid mode")
+            }
+        }
+
+        console.log(loggedInUser?.length)
+        console.log(url)
+        //results go into here
+        const response = await fetch(url, {method:method})
+        if(response.status !== 200) {
+            //if there's an error, then don't wipe any info, just let them try again
+            alert("Something went wrong, and your request could not be completed. Please try again in a few seconds.")
+        }
+        else {
+            //if everything went well, clear the input & clear the submit-info context
+            clearPreference();
+            //should be able to reload just the comment section by making its "rows"
+            //into a context variable (and making its setter a context variable too)
+            //forceUpdate()
+            window.location.reload();
+        }
     }
 
     return (
         loggedInUser ? 
-            <div className="section flex flex-col space-y-5">
+            <div className="section flex flex-col justify-center space-y-5">
                 {/* tell the user what their input is going to do */}
                 <div className="flex flex-row">
                     <h2 className="grow">{heading}</h2>
@@ -75,12 +152,17 @@ export default function CommentInput() {
                     : null}    
                 </div>
                 
-                {/* allow user to create new / modify previous input */}
+                {/* allow user to create new / modify previous input 
+                should have a character counter*/}
                 <textarea className="grow mx-10" 
                     placeholder="This movie was..."
                     value={inputText} 
                     onChange={handleInputChange}
+                    maxLength={1000}
                 />
+
+                {/* submission button */}
+                <button className="button" onClick={handleSubmit}>Submit</button>
             </div> 
         : null
     );

@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     // This is equivalent to in fetch(..., {cache: 'no-store'}).
 
     try {
-        const data = await sql<Comment>`SELECT * FROM comments`;
+        const data = await sql<Comment>`SELECT * FROM comments ORDER BY id ASC`;
         return NextResponse.json({ rows: data.rows }, { status: 200 });
     } catch (error) {
         console.error('Database Error:', error);

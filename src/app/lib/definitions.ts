@@ -4,5 +4,6 @@ export type Comment = {
     username: string,
     timestamp: string,
     text: string,
-    replying_to: number | null
+    replying_to: number | null,
+    deleted: boolean
 };

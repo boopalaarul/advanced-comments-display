@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --default-bg: rgb(234, 179, 8)
+}
+
 body {
   color: white;
-  background: rgb(234, 179, 8);
+  background: var(--default-bg);
 }
 
 .button {
@@ -17,6 +21,7 @@ body {
   border-top: 2px black solid;
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
+  background-color: var(--default-bg);
   color: black;
 }
 

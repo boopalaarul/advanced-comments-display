@@ -17,7 +17,11 @@ replying_to: number
 export default function CommentCard(props : Comment) {
     const loggedInUser = useContext(AuthorizeContext)
     return (
-        <div id={`comment-${props.id}`} className="bg-blue-800 rounded-lg p-5">
+        props.deleted 
+        ? <div className='bg-inherit text-black'>
+            <p>This comment has been deleted.</p>
+        </div>
+        : <div id={`comment-${props.id}`} className="bg-blue-800 rounded-lg p-5">
 
             {/* display user that posted comment & time of post */}
             <div className="flex flex-row border-b-[2px] border-b-white space-x-5">

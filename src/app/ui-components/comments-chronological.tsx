@@ -43,7 +43,8 @@ export default function CommentsChronological() {
                 username={row.username}
                 timestamp={row.timestamp}
                 text={row.text}
-                replying_to={row.replying_to}/>
+                replying_to={row.replying_to}
+                deleted={row.deleted}/>
             })}
     </>)
 }

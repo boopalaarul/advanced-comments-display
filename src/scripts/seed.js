@@ -49,27 +49,33 @@ async function seedComments(client) {
     try {
       await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
-      // Create the "users" table
+      // Create the "id_generator" sequence, for 0-indexed comments.
+      await client.sql`CREATE SEQUENCE id_generator INCREMENT 1 MINVALUE 0 START 0`;
+
+      console.log("Created id_generator sequence.")
+
+      // Create the "comments" table: need to update this in future so that it can
+      // create a 0-indexed "serial" (default starts generating numbers at 1)... as it
+      // stands, new IDs won't be generated, will be null unless specifically provided
       const createTable = await client.sql`
         CREATE TABLE IF NOT EXISTS comments (
-          id INTEGER PRIMARY KEY,
+          id INTEGER DEFAULT nextval('id_generator') PRIMARY KEY,
           username VARCHAR(255) NOT NULL,
           timestamp VARCHAR(255) NOT NULL,
           text TEXT NOT NULL,
-          replying_to INTEGER
+          replying_to INTEGER,
+          deleted BOOLEAN DEFAULT 'false'
         );
       `;
   
-      console.log(`Created "comments" table`);
+      console.log("Created \"comments\" table");
   
-      // Insert data into the "users" table, importing from placeholder-data.js
-      // will generate user ID by itself
+      // INSERT INTO "comments" table, importing from placeholder-data.js
       const insertedComments = await Promise.all(
         comments.map(async (comment) => {
           return client.sql`
-          INSERT INTO comments (id, username, timestamp, text, replying_to)
-          VALUES (${comment.id},${comment.username},${comment.timestamp},${comment.text},${comment.replying_to})
-          ON CONFLICT (id) DO NOTHING;
+          INSERT INTO comments (username, timestamp, text, replying_to)
+          VALUES (${comment.username},${comment.timestamp},${comment.text},${comment.replying_to});
         `;
         }),
       );
@@ -91,6 +97,7 @@ async function main() {
     
     //drop tables from previous attempt
     await client.sql`DROP TABLE IF EXISTS users, comments`
+    await client.sql`DROP SEQUENCE IF EXISTS id_generator`
 
     await seedUsers(client);
     await seedComments(client);
