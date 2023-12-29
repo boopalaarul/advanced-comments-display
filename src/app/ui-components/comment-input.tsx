@@ -1,19 +1,22 @@
-//would be cool to use this same component both for editing a comment and for making a new one
-//could have a header that tracks "new top-level comment", "replying to #id", "editing #id"
-//then depending on the header, the submit button either does a PUT or a POST... but how?
-
-//it seems like what i'd have to do is useContext, and then this component will re-render &
-//have what it needs to send the right data to the right API
-    //but if there's another way to send data from one child to a child in a different branch,
-    //besides lifting up state, then...
-
-//useEffect responds to changes in dependencies... so either a change in prop or change in state
-//maybe useReducer?
-
 import { useContext, useState } from "react"
 import { AuthorizeContext } from "./context/authorize-context"
 import { SubmitModeContext, SetSubmitModeContext } from "./context/submitmode-provider";
 import { defaultMode, editMode, replyMode, removeMode } from "../lib/submitmodes";
+
+/*
+function TextArea({value, eventHandler}:any) {
+    //this component should be able to access and modify the submitMode context
+    const submitMode = useContext(SubmitModeContext);
+    return(
+        <textarea className="grow mx-10" 
+                    placeholder="This movie was..."
+                    defaultValue={submitMode.text ? submitMode.text : ""}
+                    //value={value} 
+                    onChange={eventHandler}
+                />
+    );
+}
+*/
 
 export default function CommentInput() {
 
@@ -24,8 +27,8 @@ export default function CommentInput() {
     const submitMode = useContext(SubmitModeContext);
     const setSubmitMode = useContext(SetSubmitModeContext);
 
-    //state variable for inner text of textarea, has to update as textarea updates
-    const [inputText, setInputText] = useState(submitMode.text ? submitMode.text : "")
+    //state variable for controlled input textarea
+    const [inputText, setInputText] = useState("")
 
     let heading = "";
     switch(submitMode.mode) {
@@ -38,7 +41,7 @@ export default function CommentInput() {
             break;
         }
         case editMode: {
-            heading = `You are currently replying to comment #${submitMode.target}.`
+            heading = `You are currently editing comment #${submitMode.target}.`
             break;
         }
         case removeMode: {
@@ -52,11 +55,13 @@ export default function CommentInput() {
 
     function clearPreference() {
         setSubmitMode({mode:defaultMode});
+        setInputText(""); //clears input
     }
 
+    //controls the textarea component
     function handleInputChange(event: any) {
         const target = event.target as HTMLTextAreaElement;
-        setInputText(target.value)
+        setInputText(target.value);
     }
 
     return (
@@ -73,7 +78,7 @@ export default function CommentInput() {
                 {/* allow user to create new / modify previous input */}
                 <textarea className="grow mx-10" 
                     placeholder="This movie was..."
-                    defaultValue={inputText} 
+                    value={inputText} 
                     onChange={handleInputChange}
                 />
             </div> 

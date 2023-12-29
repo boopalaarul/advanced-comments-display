@@ -2,19 +2,18 @@ import { useContext } from "react";
 //authorization check done in CommentCard
 //import { AuthorizeContext } from "./context/authorize-context";
 import { SetSubmitModeContext } from "./context/submitmode-provider";
-import { removeMode, SubmitModeAction } from "../lib/submitmodes";
+import { replyMode, SubmitModeAction } from "../lib/submitmodes";
 
-export default function RemoveButton( props : {target : number, text: string} ) {
+export default function ReplyButton( props : {target: number} ) {
     const setSubmitMode = useContext(SetSubmitModeContext)
     const newMode : SubmitModeAction = {
-        mode: removeMode,
+        mode: replyMode,
         target: props.target,
-        text: props.text
     }
     return (
         //don't want this comment to be visible if user isn't the user who posted this comment
         //wait... if all the info i need is inside the comment card, why have a separate component at all?
         //to keep the code compartmentalized. get the relevant info from props.
-        <button className="button" onClick={()=>{setSubmitMode(newMode)}}>Remove</button>
+        <button className="button" onClick={()=>{setSubmitMode(newMode)}}>Reply</button>
     );
 }

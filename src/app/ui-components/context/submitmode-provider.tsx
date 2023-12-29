@@ -13,28 +13,6 @@ import { defaultMode, removeMode, SubmitModeAction } from '../../lib/submitmodes
 export const SubmitModeContext = createContext({} as SubmitModeAction);
 export const SetSubmitModeContext = createContext((object : SubmitModeAction) => {});
 
-/*
-//doesn't specifically have to be exported... useReducer is happening right here
-//don't even need mode in here, i might never use it-- action will overwrite previous state
-function submitModeReducer(mode, action) {
-    switch(action.type) {
-        case 'toplevel': {
-            return action
-        }
-        case 'reply': {
-
-        }
-        case 'edit': {
-
-        }
-        case 'remove': {
-
-        }
-    }
-
-}
-*/
-
 export default function SubmitModeProvider({children} : {children: any}) {
 
     const [submitMode, setSubmitMode] = useState({mode: defaultMode})
