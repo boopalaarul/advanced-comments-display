@@ -10,17 +10,22 @@
 //useEffect responds to changes in dependencies... so either a change in prop or change in state
 //maybe useReducer?
 
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { AuthorizeContext } from "./context/authorize-context"
-import { SubmitModeContext } from "./context/submitmode-provider";
+import { SubmitModeContext, SetSubmitModeContext } from "./context/submitmode-provider";
 import { defaultMode, editMode, replyMode, removeMode } from "../lib/submitmodes";
 
 export default function CommentInput() {
 
-    //if loggedInUser is null, don't want the textfield to render; but if it does render,
-    //should greet the user maybe (but logout form is already going to do that...)
+    //if loggedInUser is null, don't want the textfield to render
     const loggedInUser = useContext(AuthorizeContext);
+
+    //this component should be able to access and modify the submitMode context
     const submitMode = useContext(SubmitModeContext);
+    const setSubmitMode = useContext(SetSubmitModeContext);
+
+    //state variable for inner text of textarea, has to update as textarea updates
+    const [inputText, setInputText] = useState(submitMode.text ? submitMode.text : "")
 
     let heading = "";
     switch(submitMode.mode) {
@@ -45,24 +50,32 @@ export default function CommentInput() {
         }
     }
 
+    function clearPreference() {
+        setSubmitMode({mode:defaultMode});
+    }
+
+    function handleInputChange(event: any) {
+        const target = event.target as HTMLTextAreaElement;
+        setInputText(target.value)
+    }
+
     return (
         loggedInUser ? 
             <div className="section flex flex-col space-y-5">
-
                 {/* tell the user what their input is going to do */}
                 <div className="flex flex-row">
                     <h2 className="grow">{heading}</h2>
                     {submitMode.mode !== defaultMode
-                    ? <button className="button">Clear Preference</button>
+                    ? <button className="button" onClick={clearPreference}>Clear Preference</button>
                     : null}    
                 </div>
                 
                 {/* allow user to create new / modify previous input */}
-                <textarea className="grow mx-10" placeholder="This movie was...">
-                    {submitMode.mode === editMode || submitMode.mode === removeMode 
-                    ? submitMode.text
-                    : null}
-                </textarea>
+                <textarea className="grow mx-10" 
+                    placeholder="This movie was..."
+                    defaultValue={inputText} 
+                    onChange={handleInputChange}
+                />
             </div> 
         : null
     );
