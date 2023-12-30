@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useState, useEffect } from "react"
 import { AuthorizeContext } from "./context/authorize-context"
 import { SubmitModeContext, SetSubmitModeContext } from "./context/submitmode-provider";
 import { defaultMode, editMode, replyMode, removeMode } from "../lib/submitmodes";
@@ -27,10 +27,6 @@ export default function CommentInput() {
     const submitMode = useContext(SubmitModeContext);
     const setSubmitMode = useContext(SetSubmitModeContext);
 
-    //state variable for controlled input textarea
-    const [inputText, setInputText] = useState("")
-    //let inputText = useRef(submitMode.text ? submitMode.text : "")
-
     let heading = "";
     switch(submitMode.mode) {
         case defaultMode: {
@@ -54,6 +50,15 @@ export default function CommentInput() {
         }
     }
 
+    //state variable for controlled input textarea
+    const [inputText, setInputText] = useState("")
+
+    //post-render adjustment of textarea
+    useEffect(()=>{
+        submitMode.text ? setInputText(submitMode.text) : setInputText("");
+    }, [submitMode.text])
+
+    /** event handlers */
     function clearPreference() {
         setSubmitMode({mode:defaultMode});
         setInputText(""); //clears input
