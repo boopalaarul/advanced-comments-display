@@ -17,6 +17,10 @@ body {
   padding: 4px;
 }
 
+.button:disabled {
+  opacity: 50%;
+}
+
 .section {
   border-top: 2px black solid;
   padding-top: 1.25rem;

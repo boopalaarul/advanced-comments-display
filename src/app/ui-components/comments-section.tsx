@@ -4,7 +4,7 @@ import { useState } from "react"
 import CommentsChronological from './comments-chronological';
 import CommentsThreaded from './comments-threaded';
 
-export default function CommentsSection() {
+export default function CommentsSection( {updater} : {updater: number}) {
 
     const [isHierarchical, setMode] = useState(false)
 
@@ -20,7 +20,7 @@ export default function CommentsSection() {
                     } mode.</p>
                 <button className="button" onClick={() => {setMode(!isHierarchical)}}>Change Display Mode</button>
             </div>
-            {isHierarchical ? <CommentsThreaded root_id={null}/> : <CommentsChronological/>}
+            {isHierarchical ? <CommentsThreaded root_id={null} updater={updater}/> : <CommentsChronological updater={updater}/>}
             
         </div>
     )

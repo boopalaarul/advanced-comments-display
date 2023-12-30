@@ -3,7 +3,7 @@ import CommentCard from "./comment-card";
 import { Comment } from "../lib/definitions"
 import { useEffect, useState } from "react";
 
-export default function CommentsChronological() {
+export default function CommentsChronological( {updater} : {updater: number}) {
 
     //fetch data from within effect... and then extract response.rows (@vercel/postgres
     //QueryResult<Comment>.rows packaged into NextResponse in route.js)
@@ -32,7 +32,7 @@ export default function CommentsChronological() {
     //since this effect changes a state variable, deps = null would cause infinite loop
     //(effect reactivates on every render, and then it causes another render)
     //deps = [rows] likewise causes an infinite loop
-    }, [])
+    }, [updater])
 
     //render <CommentCard>, 1 per row
     //since this happens before the effect, rows shouldn't still be null by this time

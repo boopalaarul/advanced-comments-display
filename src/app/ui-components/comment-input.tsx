@@ -18,7 +18,7 @@ function TextArea({value, eventHandler}:any) {
 }
 */
 
-export default function CommentInput() {
+export default function CommentInput({updater, forceUpdate} : any) {
 
     //if loggedInUser is null, don't want the textfield to render
     const loggedInUser = useContext(AuthorizeContext);
@@ -128,8 +128,6 @@ export default function CommentInput() {
             }
         }
 
-        console.log(loggedInUser?.length)
-        console.log(url)
         //results go into here
         const response = await fetch(url, {method:method})
         if(response.status !== 200) {
@@ -139,10 +137,7 @@ export default function CommentInput() {
         else {
             //if everything went well, clear the input & clear the submit-info context
             clearPreference();
-            //should be able to reload just the comment section by making its "rows"
-            //into a context variable (and making its setter a context variable too)
-            //forceUpdate()
-            window.location.reload();
+            forceUpdate(updater + 1);
         }
     }
 
@@ -168,7 +163,7 @@ export default function CommentInput() {
                 />
 
                 {/* submission button */}
-                <button className="button" onClick={handleSubmit}>Submit</button>
+                <button disabled={inputText.length < 1} className="button" onClick={handleSubmit}>Submit</button>
             </div> 
         : null
     );

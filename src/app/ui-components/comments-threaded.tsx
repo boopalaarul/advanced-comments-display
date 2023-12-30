@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 //recursive, calling extra <CommentsThreaded> under every comment
 //idealized solution, but with too many comments the browser would stack-overflow
 //more realistic might be having root comments display 5 at a time, but only the root
-export default function CommentsThreaded({ root_id } : { root_id: number | null }) {
+export default function CommentsThreaded({ root_id, updater } : { root_id: number | null, updater: number }) {
     
     //base case for recursion: rows is still [] after useEffect()
     const [rows, setRows] = useState([] as Comment[])
@@ -36,7 +36,7 @@ export default function CommentsThreaded({ root_id } : { root_id: number | null 
     //since this effect changes a state variable, deps = null would cause infinite loop
     //(effect reactivates on every render, and then it causes another render)
     //deps = [rows] likewise causes an infinite loop
-    }, [root_id])
+    }, [root_id, updater])
 
     //render <CommentCard>, 1 per row
     //since this happens before the effect, rows shouldn't still be null by this time
@@ -66,7 +66,7 @@ export default function CommentsThreaded({ root_id } : { root_id: number | null 
                             index of Comment "row" within array "rows"
                             key can't be a tuple, so need every (row.id, index) to map
                             to a unique, single integer */}
-                            <CommentsThreaded root_id={row.id}/>
+                            <CommentsThreaded root_id={row.id} updater={updater}/>
                         </div>
                     </div>
                 </div>
