@@ -164,6 +164,7 @@ export default function CommentInput() {
                     value={inputText} 
                     onChange={handleInputChange}
                     maxLength={1000}
+                    disabled={submitMode.mode === removeMode}
                 />
 
                 {/* submission button */}
