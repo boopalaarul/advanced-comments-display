@@ -1,9 +1,9 @@
-//instead of create-react-app's approach where there's an index.html that has a <root>
+//instead of create-react-app's approach where there's an index.html that has a div.root
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
-//International? some kind of alphabet picker?
+//inter: font referenced by className
 const inter = Inter({ subsets: ['latin'] })
 
 //fills out the <head>

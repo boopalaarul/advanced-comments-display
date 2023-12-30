@@ -1,4 +1,4 @@
-//contains type aliases/definitions for types returned from database
+//type aliases/definitions
 export type Comment = {
     id: number,
     username: string,
@@ -7,3 +7,8 @@ export type Comment = {
     replying_to: number | null,
     deleted: boolean
 };
+
+export type Credentials = {
+    username: string,
+    password: string
+} | null;

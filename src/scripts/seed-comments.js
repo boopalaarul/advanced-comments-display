@@ -1,54 +1,9 @@
-//should be possible to do dotenv with node-postgres
 const { db } = require('@vercel/postgres')
-const {
-    comments,
-    users,
-} = require('./placeholder-data.js');
-
-async function seedUsers(client) {
-    try {
-      await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-      // Create the "users" table
-      const createTable = await client.sql`
-        CREATE TABLE IF NOT EXISTS users (
-          id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-          name VARCHAR(255) NOT NULL
-        );
-      `;
-  
-      console.log(`Created "users" table`);
-
-      // Insert data into the "users" table, importing from placeholder-data.js
-      // will generate user ID by itself
-      const insertedUsers = await Promise.all(
-        users.map(async (user) => {
-          return client.sql`
-          INSERT INTO users (name)
-          VALUES (${user.username})
-          ON CONFLICT (id) DO NOTHING;
-        `;
-        }),
-      );
-  
-      console.log(`Seeded ${insertedUsers.length} users`);
-  
-      //returning both of the sql connections' results-- for logging
-      return {
-        createTable,
-        users: insertedUsers,
-      };
-    } catch (error) {
-      console.error('Error seeding users:', error);
-      throw error;
-    }
-}
+const { comments } = require('./placeholder-data.js');
 
 //Seed the 10 initial comments
 async function seedComments(client) {
     try {
-      await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
       // Create the "id_generator" sequence, for 0-indexed comments.
       await client.sql`CREATE SEQUENCE id_generator INCREMENT 1 MINVALUE 0 START 0`;
 
@@ -96,10 +51,9 @@ async function main() {
     const client = await db.connect();
     
     //drop tables from previous attempt
-    await client.sql`DROP TABLE IF EXISTS users, comments`
+    await client.sql`DROP TABLE IF EXISTS comments`
     await client.sql`DROP SEQUENCE IF EXISTS id_generator`
 
-    await seedUsers(client);
     await seedComments(client);
     await client.end();
   }

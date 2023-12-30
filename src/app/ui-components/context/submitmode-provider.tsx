@@ -2,9 +2,9 @@
 //Meant to be used by CommentCard's Edit, Delete, and Remove buttons,
 //as well as CommentInput's Submit and Clear Preference buttons.
 "use client"
-import { createContext, SetStateAction } from "react";
-import { useState, Dispatch } from "react";
-import { defaultMode, removeMode, SubmitModeAction } from '../../lib/submitmodes'
+import { createContext } from "react";
+import { useState } from "react";
+import { defaultMode, SubmitModeAction } from '../../lib/submitmodes'
 
 //have to export these to be able to import and use them in other elements
 //if next state of textarea has no impact on previous state... why use a reducer at all,

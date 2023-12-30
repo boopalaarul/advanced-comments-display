@@ -1,14 +1,14 @@
 "use client"
 import App from './ui-components/app-component'
-import { AuthorizeContext } from './ui-components/context/authorize-context'
+import AuthorizeProvider from './ui-components/context/authorize-provider'
 import SubmitModeProvider from './ui-components/context/submitmode-provider'
 
 export default function Home() {
   return (
-    <AuthorizeContext.Provider value="Jess">
+    <AuthorizeProvider>
       <SubmitModeProvider>
         <App />
       </SubmitModeProvider>          
-    </AuthorizeContext.Provider>
+    </AuthorizeProvider>
   )
 }

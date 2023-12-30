@@ -1,12 +1,13 @@
 import { useContext, useState, useEffect } from "react"
-import { AuthorizeContext } from "./context/authorize-context"
+import { AuthorizeContext } from "./context/authorize-provider"
 import { SubmitModeContext, SetSubmitModeContext } from "./context/submitmode-provider";
 import { defaultMode, editMode, replyMode, removeMode } from "../lib/submitmodes";
 
 export default function CommentInput({updater, forceUpdate} : any) {
 
     //if loggedInUser is null, don't want the textfield to render
-    const loggedInUser = useContext(AuthorizeContext);
+    const credentials = useContext(AuthorizeContext);
+    const loggedInUser = credentials?.username;
     
     //how many chars allowed in new comment
     const charLimit = 1000;
@@ -105,10 +106,7 @@ export default function CommentInput({updater, forceUpdate} : any) {
                 url = `/api/editData/?id=${submitMode.target}`
                     + `&username=${loggedInUser}`
                     + `&text=${submitMode.text}`
-                method = "DELETE"
-                //don't know what fields we need for this one
-                //before designing the APIs, have the exact SQL commands we need written
-                //out on paper
+                method = "PATCH" //since this method 1) needs a body 2) flags data rather than deleting
                 break;
             }
             default: {
@@ -117,7 +115,7 @@ export default function CommentInput({updater, forceUpdate} : any) {
         }
 
         //results go into here
-        const response = await fetch(url, {method:method})
+        const response = await fetch(url, {method:method, body:JSON.stringify(credentials)})
         if(response.status !== 200) {
             //if there's an error, then don't wipe any info, just let them try again
             alert("Something went wrong, and your request could not be completed. Please try again in a few seconds.")

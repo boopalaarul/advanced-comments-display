@@ -4,7 +4,7 @@ import ReplyButton from './button-reply-comment'
 import EditButton from './button-edit-comment'
 import RemoveButton from './button-remove-comment'
 
-import { AuthorizeContext } from './context/authorize-context'
+import { AuthorizeContext } from './context/authorize-provider'
 import { useContext } from 'react'
 /*
 id: number, 
@@ -15,7 +15,8 @@ replying_to: number
 */
 
 export default function CommentCard(props : Comment) {
-    const loggedInUser = useContext(AuthorizeContext)
+    const credentials = useContext(AuthorizeContext)
+    const loggedInUser = credentials?.username;
     return (
         props.deleted 
         ? <div className='bg-inherit text-black'>

@@ -3,11 +3,31 @@
 
 import { sql } from '@vercel/postgres';
 import { NextRequest, NextResponse } from 'next/server';
+import { AuthConstants, matchCredentials } from '@/app/lib/match-credentials';
+
+async function checkCredentials (request : NextRequest) {
+    try {
+        const reqBody = await request.json();
+        const credentials = reqBody.credentials;
+        //if credentials is null or undefined
+        if(!credentials) return false;
+        const matchResults = await matchCredentials(credentials);
+        if(matchResults !== AuthConstants.PasswordsMatch) return false;
+        return true;    
+    } catch {
+        return false;
+    }
+}
 
 //Handles incoming toplevel comments and incoming comment replies.
 export async function POST(request: NextRequest) {
     // Add noStore() here prevent the response from being cached.
     // This is equivalent to in fetch(..., {cache: 'no-store'}).
+
+    const credCheckResults = await checkCredentials(request);
+    if(!credCheckResults) {
+        return NextResponse.json({}, {status: 401})
+    }
 
     //username, timestamp, text, replying to
     const params = request.nextUrl.searchParams;
@@ -42,6 +62,11 @@ export async function PUT(request: NextRequest) {
     // Add noStore() here prevent the response from being cached.
     // This is equivalent to in fetch(..., {cache: 'no-store'}).
 
+    const credCheckResults = await checkCredentials(request);
+    if(!credCheckResults) {
+        return NextResponse.json({}, {status: 401})
+    }
+
     //contains id, username, timestamp, and text-- update the timestamp and text,
     //but only if id and username WHERE checks both pass
     const params = request.nextUrl.searchParams;
@@ -64,9 +89,14 @@ export async function PUT(request: NextRequest) {
 
 //Flags comment as deleted, but doesn't wipe its data (ideally we would just wipe
 //the data but for demo purposes I may want to conveniently bring it back).
-export async function DELETE(request: NextRequest) {
+export async function PATCH(request: NextRequest) {
     // Add noStore() here prevent the response from being cached.
     // This is equivalent to in fetch(..., {cache: 'no-store'}).
+
+    const credCheckResults = await checkCredentials(request);
+    if(!credCheckResults) {
+        return NextResponse.json({}, {status: 401})
+    }
 
     //id, username, and text
     const params = request.nextUrl.searchParams;

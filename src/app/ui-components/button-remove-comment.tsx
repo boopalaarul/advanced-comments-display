@@ -1,6 +1,4 @@
 import { useContext } from "react";
-//authorization check done in CommentCard
-//import { AuthorizeContext } from "./context/authorize-context";
 import { SetSubmitModeContext } from "./context/submitmode-provider";
 import { removeMode, SubmitModeAction } from "../lib/submitmodes";
 
