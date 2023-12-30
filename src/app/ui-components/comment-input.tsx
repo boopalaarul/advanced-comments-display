@@ -3,25 +3,13 @@ import { AuthorizeContext } from "./context/authorize-context"
 import { SubmitModeContext, SetSubmitModeContext } from "./context/submitmode-provider";
 import { defaultMode, editMode, replyMode, removeMode } from "../lib/submitmodes";
 
-/*
-function TextArea({value, eventHandler}:any) {
-    //this component should be able to access and modify the submitMode context
-    const submitMode = useContext(SubmitModeContext);
-    return(
-        <textarea className="grow mx-10" 
-                    placeholder="This movie was..."
-                    defaultValue={submitMode.text ? submitMode.text : ""}
-                    //value={value} 
-                    onChange={eventHandler}
-                />
-    );
-}
-*/
-
 export default function CommentInput({updater, forceUpdate} : any) {
 
     //if loggedInUser is null, don't want the textfield to render
     const loggedInUser = useContext(AuthorizeContext);
+    
+    //how many chars allowed in new comment
+    const charLimit = 1000;
 
     //this component should be able to access and modify the submitMode context
     const submitMode = useContext(SubmitModeContext);
@@ -152,15 +140,20 @@ export default function CommentInput({updater, forceUpdate} : any) {
                     : null}    
                 </div>
                 
-                {/* allow user to create new / modify previous input 
-                should have a character counter*/}
-                <textarea className="grow mx-10" 
-                    placeholder="This movie was..."
-                    value={inputText} 
-                    onChange={handleInputChange}
-                    maxLength={1000}
-                    disabled={submitMode.mode === removeMode}
-                />
+                {/* allow user to create new / modify previous input*/}
+                <div className="px-10 flex flex-col">
+                    <p className="justify-left">
+                        Characters remaining: {charLimit - inputText.length}/{charLimit}
+                    </p>
+
+                    <textarea className="grow" 
+                        placeholder="This movie was..."
+                        value={inputText} 
+                        onChange={handleInputChange}
+                        maxLength={charLimit}
+                        disabled={submitMode.mode === removeMode}
+                    />
+                </div>
 
                 {/* submission button */}
                 <button disabled={inputText.length < 1} className="button" onClick={handleSubmit}>Submit</button>
