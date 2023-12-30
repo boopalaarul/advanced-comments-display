@@ -114,11 +114,13 @@ export default function CommentInput({updater, forceUpdate} : any) {
             }
         }
 
-        //results go into here
-        const response = await fetch(url, {method:method, body:JSON.stringify(credentials)})
+        //the "body" does not wrap the contents of stringify, the body is itself that method
+        //parameter for stringify should contain credentials ({credentials}, not "credentials")
+        const response = await fetch(url, {method:method, body:JSON.stringify({credentials})})
         if(response.status !== 200) {
             //if there's an error, then don't wipe any info, just let them try again
             alert("Something went wrong, and your request could not be completed. Please try again in a few seconds.")
+            console.log(response.status)
         }
         else {
             //if everything went well, clear the input & clear the submit-info context

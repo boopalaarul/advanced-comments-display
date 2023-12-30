@@ -9,12 +9,15 @@ async function checkCredentials (request : NextRequest) {
     try {
         const reqBody = await request.json();
         const credentials = reqBody.credentials;
+        
         //if credentials is null or undefined
         if(!credentials) return false;
         const matchResults = await matchCredentials(credentials);
+        
         if(matchResults !== AuthConstants.PasswordsMatch) return false;
         return true;    
     } catch {
+        console.log("error?")
         return false;
     }
 }
